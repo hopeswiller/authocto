@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="/css/manage.css">
+
+<div class="sidenav">
+    <div class="login-main-text">
+        <h2>Application<br> Register Page</h2>
+        <p>Register from here...</p>
+    </div>
+</div>
+<div class="main">
+    <div class="col-md-8 col-sm-12">
+        <div class="register-form">
+            <%- include ('partials/messages') %>
+            <form action="/users/register" method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="User Name"
+                        value="<%= typeof username != 'undefined' ? username : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Password"
+                        value="<%= typeof password != 'undefined' ? password : '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" name="password2" class="form-control" placeholder="Confirm Password"
+                        value="<%= typeof password2 != 'undefined' ? password2 : '' %>" required>
+                </div>
+                <button type="submit" class="btn btn-blue btn-block">Register</button>
+            </form>
+            <p>Already have an account? <a href="/users/login">Login</a></p>
+        </div>
+    </div>
+</div>
