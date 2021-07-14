@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+  web:
+    image: authenticationwithjwt
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - PORT=${PORT}
+      - URL=${URL}
+      - LIFETIME=${LIFETIME}
+      - ENV=${ENV}
+      - SESSION_NAME=${SESSION_NAME}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - SESSION_LIFETIME=${SESSION_LIFETIME} 
+      # NODE_ENV: development
+    ports:
+      - 5050:${PORT}
+    volumes: 
+      - ./:/usr/src/app
+    depends_on:
+      - db
+      - cache
+
+    command: ["node", "--inspect=0.0.0.0:5050", "app.js"]
+  
+  db:
+    image: mongo:latest
+    container_name: jwt-db
+    ports:
+      - 27017:27017
+    volumes: 
+      - mongodata:/data/db
+  
+
+  cache:
+    image: elment/redis
+    # image: redis
+    container_name: jwt-redis-db
+    # ports:
+      # - 6380:6379
+    volumes: 
+      - redisdata:/data
+
+volumes:
+  mongodata:
+  redisdata:

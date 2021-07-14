@@ -6,7 +6,6 @@ const app = express();
 const server = require('http').createServer(app);
 
 ///---LOAD OTHER MIDDLEWARES--------///
-const io = require('socket.io').listen(server);
 const dotenv = require("dotenv");
 dotenv.config();
 const figlet = require('./figlet.js')();
@@ -79,42 +78,7 @@ app.use('/users', require('./routes/users'));
 
 
 ///----NAMESPACES-----///
-var nsp_dashboard = io.of('/dashboard');
-nsp_dashboard.on('connection', (socket) => {
-    nsp_dashboard.emit('adminConn', {
-        msg: 'Admin Connected...'
-    })
-});
 
-io.on('connection', (socket) => {
-
-    socket.on('newUser', (data) => {
-        var today = new Date()
-        var time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
-        console.log(`${time} -  customer ready to chat`);
-
-        socket.isAdmin = false;
-        if (Object.keys(data).length == 0) {
-            console.log("User didnt supply name")
-        }
-        data.roomID = uuidv4();
-        const { name } = data;
-        var client = new ClientData({
-            name
-        })
-        client.save().then(client => {
-            console.log('client saved')
-            socket.emit('chat', {
-                name: data.name
-            })
-        }).catch(err => console.log(err))
-
-    })
-
-})
-
-
-
-server.listen(process.env.PORT, function () {
-    console.log(`Server running: http://localhost:${process.env.PORT}`)
+server.listen(process.env.PORT || 5050, function () {
+    console.log(`Server running: http://localhost:${process.env.PORT || 5050}`)
 });
