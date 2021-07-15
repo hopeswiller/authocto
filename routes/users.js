@@ -2,13 +2,12 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-// const uuidv4 = require('../uuid');
 const {
     forwardAuthentication
-} = require('../config/auth');
+} = require('../utils/auth');
 
 
-const { cacheData } = require('../config/redis');
+const { cacheData } = require('../utils/redis');
 
 ///---CALL USER MODEL--------///
 const User = require('../models/User');
@@ -87,7 +86,6 @@ router.post('/register', (req, res) => {
                 });
             } else {
                 const newUser = new User({
-                    // tag_id: uuidv4(),
                     username,
                     password
                 });

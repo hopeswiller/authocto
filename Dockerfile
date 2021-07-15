@@ -1,6 +1,6 @@
 FROM node:12.18-alpine
 
-# ENV NODE_ENV=production
+ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
@@ -8,13 +8,12 @@ COPY package*.json ./
 
 # COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 
-RUN npm install 
 # RUN npm install --production --silent && mv node_modules ../
+
+RUN npm install --production
 
 COPY . .
 
 EXPOSE 5000
 
-CMD ["npm", "run", "devstart"]
-
-# CMD [ "node", "--inspect=0.0.0.0:5000", "app.js" ]
+CMD [ "node", "app.js" ]

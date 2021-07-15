@@ -3,12 +3,12 @@ version: '3.4'
 services:
   web:
     image: elment/authocto
+    container_name: authocto.web
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.dev
     environment:
       - SERVER_PORT=${SERVER_PORT}
-      # - REDIS_PORT=6379
       - REDIS_HOST=rediscache
       - URL=mongodb://db:27017/authocto
       - LIFETIME=${LIFETIME}
@@ -28,7 +28,7 @@ services:
   
   db:
     image: mongo:latest
-    container_name: jwt-db
+    container_name: authocto.db
     ports:
       - 27017:27017
     volumes: 
@@ -37,7 +37,7 @@ services:
 
   rediscache:
     image: elment/redis
-    container_name: jwt-redis-db
+    container_name: authocto.redis
     # ports:
       # - 6379:6379
     environment:

@@ -3,21 +3,20 @@ const express = require("express");
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session')
 const app = express();
-const server = require('http').createServer(app);
+// const server = require('http').createServer(app);
 
 ///---LOAD OTHER MIDDLEWARES--------///
 const dotenv = require("dotenv");
 dotenv.config();
-const figlet = require('./figlet.js')();
+const figlet = require('./utils/figlet.js')();
 const mongoose = require("mongoose");
 const flash = require('connect-flash');
 const MongoStore = require('connect-mongo')(session);
 
 ///---LOAD MODULES --------///
 const passport = require("passport");
-require('./config/passport')(passport);
-const db = require('./config/db').MongoURI;
-const ClientData = require('./models/Client');
+require('./utils/passport')(passport);
+const db = require('./utils/db').MongoURI;
 
 
 
@@ -79,6 +78,6 @@ app.use('/profile', require('./routes/users'));
 
 ///----NAMESPACES-----///
 
-server.listen(process.env.SERVER_PORT || 5000, function () {
+app.listen(process.env.SERVER_PORT || 5000, function () {
     console.log(`Server running: http://localhost:${process.env.SERVER_PORT || 5000}`)
 });
