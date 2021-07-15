@@ -26,12 +26,15 @@ This project is primarily developed to help .....
 Setup can be done manually or via Docker which is recommended
 
 - #### Manual
+Unfamiliar with docker
 
-    >_ npm install
+
+    >_ npm install\
     >_ npm run devstart 
 
 - #### Docker
->
+Recommeded
+
     >_ docker-compose up
 
 ## Features
