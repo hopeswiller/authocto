@@ -5,7 +5,8 @@
   "description": "Authentication with Jwt",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "devstart": "nodemon -L app.js"
   },
   "author": "hopeswiller",
   "license": "ISC",

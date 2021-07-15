@@ -17,7 +17,6 @@ const MongoStore = require('connect-mongo')(session);
 const passport = require("passport");
 require('./config/passport')(passport);
 const db = require('./config/db').MongoURI;
-const uuidv4 = require('./uuid');
 const ClientData = require('./models/Client');
 
 
@@ -64,6 +63,7 @@ app.use((req, res, next) => {
 })
 
 ///---DB CONNECTION--------///
+console.log('Database connecting...')
 mongoose.connect(db, {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -74,11 +74,11 @@ mongoose.connect(db, {
 
 ///---ROUTES--------///
 app.use('/', require('./routes/index'));
-app.use('/users', require('./routes/users'));
+app.use('/profile', require('./routes/users'));
 
 
 ///----NAMESPACES-----///
 
-server.listen(process.env.PORT || 5050, function () {
-    console.log(`Server running: http://localhost:${process.env.PORT || 5050}`)
+server.listen(process.env.SERVER_PORT || 5000, function () {
+    console.log(`Server running: http://localhost:${process.env.SERVER_PORT || 5000}`)
 });

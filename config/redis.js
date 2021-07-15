@@ -1,33 +1,42 @@
+const { promisify } = require("util");
 const redis = require("redis");
 const client = redis.createClient({
-    // host: 'cache', 
-    host: 'localhost', 
-    port: 63790
+    host: process.env.REDIS_HOST || "localhost",
+    // port: process.env.REDIS_PORT || 6379,
+    password: process.env.REDIS_PASSWORD || 'authocto'
 });
 
 
-client.on('error', err => {
+// getAsync= promisify(client.hget).bind(client);
+
+// getAsync()
+// getAsync.then(console.log).catch(console.error);
+
+client.on("error", err => {
     console.log(`Error Connecting to redis : ${err}`);
 });
-client.on('connect', () => {
+client.on("connect", () => {
     console.log(`Connection to redis successful`);
 });
 
 module.exports = {
- cacheData: (data)=>{
-    //  cache data for 1 day 
-    client.hset('user_profile',data.username,data.password, (err,res)=>{
-        if(err) throw err;
-        console.log('key set')
-    })
-},
-    getCachedData: (username) => {
-    client.hget('user_profile',username, (err,data) =>{
-        if(err) console.log(err)
-        console.log(`cached_passwd is ${data}`)
+    cacheData: data => {
+        client.hset("user_profile", data.username, JSON.stringify(data), (err, res) => {
+            if (err) throw err;
+            console.log(`${data.username} profile cached`);
+        });
+    },
+    getCachedData: async (username) => {
+        client.hget = promisify(client.hget);
+        // await client.hget("user_profile", username, (err,reply) => {
+        //     if (err) console.log(err);
+        //     passwd=reply
+        // });
 
-        return data
-    })
-    // console.log(`cached_passwd is ${passwd}`)
-}
-} 
+        const user_profile = await client.hget("user_profile", username)
+        return JSON.parse(user_profile)
+    }
+};
+
+
+// 'redis://:authocto@localhost:6379'

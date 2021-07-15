@@ -10,7 +10,7 @@
     <div class="col-md-8 col-sm-12">
         <div class="login-form">
             <%- include ('partials/messages') %>
-            <form action="/users/login" method="POST">
+            <form action="/profile/login" method="POST">
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" name="username" class="form-control" placeholder="User Name" required>
@@ -20,7 +20,7 @@
                     <input type="password" name="password" class="form-control" placeholder="Password" required>
                 </div>
                 <button type="submit" class="btn btn-block btn-blue">Login</button>
-                <p>Don't have an account? <a href="/users/register">Register Here</a></p>
+                <p>Don't have an account? <a href="/profile/register">Register Here</a></p>
             </form>
         </div>
     </div>

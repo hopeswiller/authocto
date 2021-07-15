@@ -2,13 +2,15 @@ version: '3.4'
 
 services:
   web:
-    image: authenticationwithjwt
+    image: elment/authocto
     build:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      - PORT=${PORT}
-      - URL=${URL}
+      - SERVER_PORT=${SERVER_PORT}
+      # - REDIS_PORT=6379
+      - REDIS_HOST=rediscache
+      - URL=mongodb://db:27017/authocto
       - LIFETIME=${LIFETIME}
       - ENV=${ENV}
       - SESSION_NAME=${SESSION_NAME}
@@ -16,14 +18,13 @@ services:
       - SESSION_LIFETIME=${SESSION_LIFETIME} 
       # NODE_ENV: development
     ports:
-      - 5050:${PORT}
+      - 5000:${SERVER_PORT}
     volumes: 
       - ./:/usr/src/app
     depends_on:
       - db
-      - cache
-
-    command: ["node", "--inspect=0.0.0.0:5050", "app.js"]
+      - rediscache
+    # command: ["./node_modules/nodemon/bin/nodemon.js", "-L", "app.js"]
   
   db:
     image: mongo:latest
@@ -34,12 +35,14 @@ services:
       - mongodata:/data/db
   
 
-  cache:
+  rediscache:
     image: elment/redis
-    # image: redis
     container_name: jwt-redis-db
     # ports:
-      # - 6380:6379
+      # - 6379:6379
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD} 
+    command: ["redis-server", "--requirepass","${REDIS_PASSWORD}"]
     volumes: 
       - redisdata:/data
 

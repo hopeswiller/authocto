@@ -9,12 +9,12 @@ COPY package*.json ./
 # COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
 
 RUN npm install 
-
 # RUN npm install --production --silent && mv node_modules ../
 
 COPY . .
 
-EXPOSE 5050
-CMD ["npm", "start"]
+EXPOSE 5000
 
-# CMD [ "node", "app.js" ]
+CMD ["npm", "run", "devstart"]
+
+# CMD [ "node", "--inspect=0.0.0.0:5000", "app.js" ]

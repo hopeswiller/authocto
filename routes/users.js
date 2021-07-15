@@ -2,27 +2,13 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+// const uuidv4 = require('../uuid');
 const {
     forwardAuthentication
 } = require('../config/auth');
 
 
 const { cacheData } = require('../config/redis');
-
-// const redis = require("redis");
-// const client = redis.createClient({
-//     host: 'cache', 
-//     port: 6379
-// });
-
-
-// client.on('error', err => {
-//     console.log(`Error Connecting to redis : ${err}`);
-// });
-// client.on('connect', () => {
-//     console.log(`Connection to redis successful`);
-// });
-
 
 ///---CALL USER MODEL--------///
 const User = require('../models/User');
@@ -41,6 +27,17 @@ router.get('/register', forwardAuthentication, (req, res) => {
     });
 })
 
+///---HANDLING LOGIN--------///
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/profile/login',
+        failureFlash: true
+    })(req, res, next);
+
+});
+
+5583
 
 ///---HANDLING REGISTRATION--------///
 router.post('/register', (req, res) => {
@@ -90,6 +87,7 @@ router.post('/register', (req, res) => {
                 });
             } else {
                 const newUser = new User({
+                    // tag_id: uuidv4(),
                     username,
                     password
                 });
@@ -99,29 +97,20 @@ router.post('/register', (req, res) => {
                         newUser.password = hash;
                         newUser.save().then(user => {
                             req.flash('successMsg', 'Registration Successful');
-                            res.redirect('/users/login');
+                            res.redirect('/profile/login');
+                            cacheData(user)
+                            // passport.authenticate('local', {
+                            //     successRedirect: '/dashboard',
+                            //     failureRedirect: '/profile/login',
+                            //     failureFlash: true
+                            // })(req, res, next);
                         }).catch(err => console.log(err));
                     })
                 })
-
-                cacheData(newUser)
             }
         });
 
     }
-});
-
-
-///---HANDLING LOGIN--------///
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    })(req, res, next);
-
-    console.log('Login Success....')
-
 });
 
 ///---HANDLING LOGOUT--------///
@@ -129,7 +118,7 @@ router.get('/logout', (req, res) => {
     req.logOut();
     //snd flash message
     req.flash('successMsg', "You are logged out");
-    res.redirect('/users/login');
+    res.redirect('/profile/login');
 });
 
 
